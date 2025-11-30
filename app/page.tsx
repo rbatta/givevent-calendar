@@ -1,20 +1,17 @@
 import Link from 'next/link'
 import { Button } from '@/components/ui/Button'
+import { LandingNav } from '@/components/LandingNav'
+import { CreateCalendarButton } from '@/components/CreateCalendarButton'
 
 export default function Home() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-green-50 via-white to-red-50">
       <nav className="p-6">
         <div className="max-w-6xl mx-auto flex justify-between items-center">
-          <h1 className="text-2xl font-bold text-green-700">Givevent</h1>
-          <div className="space-x-4">
-            <Link href="/login">
-              <Button variant="ghost">Sign In</Button>
-            </Link>
-            <Link href="/signup">
-              <Button>Get Started</Button>
-            </Link>
-          </div>
+          <Link href="/">
+            <h1 className="text-2xl font-bold text-green-700 cursor-pointer">Givevent</h1>
+          </Link>
+          <LandingNav />
         </div>
       </nav>
 
@@ -29,11 +26,7 @@ export default function Home() {
             Create a personalized advent calendar where each day reveals a charity
             and donation amount. Make giving fun, meaningful, and impactful.
           </p>
-          <Link href="/signup">
-            <Button size="lg" className="text-lg px-8 py-4">
-              Create Your Calendar
-            </Button>
-          </Link>
+          <CreateCalendarButton />
         </div>
 
         <div className="grid md:grid-cols-3 gap-8 mt-20">

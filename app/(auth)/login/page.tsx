@@ -13,12 +13,19 @@ export default function LoginPage() {
           Sign in to your Givevent account
         </p>
         <LoginForm />
-        <p className="mt-4 text-center text-sm text-gray-600">
-          Don't have an account?{' '}
-          <Link href="/signup" className="text-green-600 hover:text-green-700 font-medium">
-            Sign up
-          </Link>
-        </p>
+        <div className="mt-4 space-y-2">
+          <p className="text-center text-sm text-gray-600">
+            <Link href="/reset-password" className="text-blue-600 hover:text-blue-700 font-medium">
+              Forgot password?
+            </Link>
+          </p>
+          <p className="text-center text-sm text-gray-600">
+            Don't have an account?{' '}
+            <Link href="/signup" className="text-green-600 hover:text-green-700 font-medium">
+              Sign up
+            </Link>
+          </p>
+        </div>
       </Card>
     </div>
   )
