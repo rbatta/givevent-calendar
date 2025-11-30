@@ -20,7 +20,7 @@ export function SignupForm() {
     setError('')
     setLoading(true)
 
-    const { data, error: signUpError } = await supabase.auth.signUp({
+    const { error: signUpError } = await supabase.auth.signUp({
       email,
       password,
       options: {
@@ -33,21 +33,9 @@ export function SignupForm() {
     if (signUpError) {
       setError(signUpError.message)
       setLoading(false)
-    } else if (data.user) {
-      // Create profile
-      const { error: profileError } = await supabase
-        .from('profiles')
-        .insert({
-          id: data.user.id,
-          display_name: displayName,
-        })
-
-      if (profileError) {
-        setError(profileError.message)
-        setLoading(false)
-      } else {
-        router.push('/dashboard')
-      }
+    } else {
+      // Profile is automatically created by database trigger
+      router.push('/dashboard')
     }
   }
 
