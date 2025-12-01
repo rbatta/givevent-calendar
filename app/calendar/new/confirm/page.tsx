@@ -35,12 +35,9 @@ export default function ConfirmPage() {
   // Determine calendar type based on dates
   const getCalendarType = () => {
     if (!data.startDate || !data.endDate) return 'Custom'
-    const start = new Date(data.startDate)
-    const end = new Date(data.endDate)
-    const startMonth = start.getMonth() + 1 // 1-indexed
-    const startDay = start.getDate()
-    const endMonth = end.getMonth() + 1
-    const endDay = end.getDate()
+    // Parse dates as local dates to avoid timezone issues
+    const [startYear, startMonth, startDay] = data.startDate.split('-').map(Number)
+    const [endYear, endMonth, endDay] = data.endDate.split('-').map(Number)
 
     // Advent (Dec 1 - Dec 25)
     if (startMonth === 12 && startDay === 1 && endMonth === 12 && endDay === 25) {

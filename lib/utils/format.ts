@@ -10,7 +10,15 @@ export function formatCurrency(amount: number): string {
 }
 
 export function formatDate(date: Date | string, formatStr: string = 'MMM d, yyyy'): string {
-  const dateObj = typeof date === 'string' ? new Date(date) : date
+  let dateObj: Date
+  if (typeof date === 'string') {
+    // Parse date string as local date to avoid timezone issues
+    // e.g., "2025-12-01" should be Dec 1, not Nov 30 or Dec 2
+    const [year, month, day] = date.split('-').map(Number)
+    dateObj = new Date(year, month - 1, day)
+  } else {
+    dateObj = date
+  }
   return dateFnsFormat(dateObj, formatStr)
 }
 
