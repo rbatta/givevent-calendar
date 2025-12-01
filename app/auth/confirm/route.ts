@@ -18,21 +18,22 @@ export async function GET(request: Request) {
       // Check if profile exists, create if not
       const { data: { user } } = await supabase.auth.getUser()
 
-      if (user) {
+      if (user?.id) {
+        const userId = user.id
         const { data: profile } = await supabase
           .from('profiles')
           .select('*')
-          .eq('id', user.id)
-          .single()
+          .eq('id', userId as any)
+          .maybeSingle()
 
         // If profile doesn't exist, create it
         if (!profile) {
           await supabase
             .from('profiles')
             .insert({
-              id: user.id,
-              display_name: user.email,
-            })
+              id: userId,
+              display_name: user.email || '',
+            } as any)
         }
       }
 

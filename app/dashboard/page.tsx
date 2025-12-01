@@ -155,7 +155,7 @@ export default function DashboardPage() {
         ) : (
           <Card className="text-center py-12">
             <p className="text-gray-600 mb-4 text-lg">
-              You haven't created any calendars yet.
+              You haven&apos;t created any calendars yet.
             </p>
             <Link href="/calendar/new">
               <Button>Create Your First Calendar</Button>

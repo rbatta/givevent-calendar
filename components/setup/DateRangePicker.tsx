@@ -50,6 +50,7 @@ export function DateRangePicker({ value, onChange }: DateRangePickerProps) {
     if (selectedPreset !== 'custom') {
       onChange(presets[selectedPreset])
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedPreset])
 
   const handlePresetClick = (preset: PresetType) => {

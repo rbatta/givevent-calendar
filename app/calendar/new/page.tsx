@@ -58,7 +58,7 @@ export default function CalendarNewPage() {
         <Card>
           <h2 className="text-2xl font-bold mb-6">Create Your Charity Calendar</h2>
           <p className="text-gray-600 mb-6">
-            Let's start by giving your calendar a name and selecting your date range.
+            Let&apos;s start by giving your calendar a name and selecting your date range.
           </p>
 
           <div className="space-y-6">

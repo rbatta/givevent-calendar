@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { Button } from '@/components/ui/Button'
@@ -50,11 +50,7 @@ export default function CalendarViewPage({ params }: { params: { id: string } })
   const [loading, setLoading] = useState(true)
   const [viewMode, setViewMode] = useState<'card_grid' | 'calendar_view'>('calendar_view')
 
-  useEffect(() => {
-    fetchCalendarData()
-  }, [params.id])
-
-  const fetchCalendarData = async () => {
+  const fetchCalendarData = useCallback(async () => {
     try {
       // Fetch calendar
       const { data: calData, error: calError } = await supabase
@@ -90,7 +86,11 @@ export default function CalendarViewPage({ params }: { params: { id: string } })
     } finally {
       setLoading(false)
     }
-  }
+  }, [params.id, supabase])
+
+  useEffect(() => {
+    fetchCalendarData()
+  }, [fetchCalendarData])
 
   const handleDayClick = async (dayData: DayCardData) => {
     const day = days.find(d => d.id === dayData.id)

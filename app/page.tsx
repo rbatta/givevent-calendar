@@ -58,7 +58,7 @@ export default function Home() {
             </div>
             <h3 className="text-xl font-semibold mb-2">Set Your Budget</h3>
             <p className="text-gray-600">
-              Define your total budget and donation range - we'll handle the rest
+              Define your total budget and donation range - we&apos;ll handle the rest
             </p>
           </div>
         </div>

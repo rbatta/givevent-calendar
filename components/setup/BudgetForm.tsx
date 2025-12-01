@@ -32,6 +32,7 @@ export function BudgetForm({ value, onChange }: BudgetFormProps) {
         maxAmount: defaults.maxAmount,
       })
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [totalBudget, useDefaults])
 
   const handleChange = (field: 'totalBudget' | 'minAmount' | 'maxAmount', val: string) => {

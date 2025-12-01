@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useCallback } from 'react'
 import { createClient } from '@/lib/supabase/client'
 import { Card } from '@/components/ui/Card'
 import { Button } from '@/components/ui/Button'
@@ -11,11 +11,7 @@ export default function DebugAuthPage() {
   const [loading, setLoading] = useState(true)
   const supabase = createClient()
 
-  useEffect(() => {
-    checkAuth()
-  }, [])
-
-  const checkAuth = async () => {
+  const checkAuth = useCallback(async () => {
     // Check session
     const { data: { session: sessionData } } = await supabase.auth.getSession()
     setSession(sessionData)
@@ -25,7 +21,11 @@ export default function DebugAuthPage() {
     setUser(userData)
 
     setLoading(false)
-  }
+  }, [supabase])
+
+  useEffect(() => {
+    checkAuth()
+  }, [checkAuth])
 
   const refreshSession = async () => {
     const { data, error } = await supabase.auth.refreshSession()

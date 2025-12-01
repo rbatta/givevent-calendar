@@ -209,8 +209,8 @@ export default function ConfirmPage() {
 
             <div className="p-4 bg-blue-50 border border-blue-200 rounded-lg">
               <p className="text-sm text-blue-700">
-                When you click "Create Calendar", we'll randomly assign charities and donation amounts
-                to each day in your date range. You'll be able to reveal one day at a time!
+                When you click &quot;Create Calendar&quot;, we&apos;ll randomly assign charities and donation amounts
+                to each day in your date range. You&apos;ll be able to reveal one day at a time!
               </p>
             </div>
 

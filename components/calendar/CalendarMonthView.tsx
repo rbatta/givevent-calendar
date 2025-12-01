@@ -79,9 +79,11 @@ export function CalendarMonthView({ days, onDayClick }: CalendarMonthViewProps) 
             )
           }
 
+          const dayNumber = new Date(dayData.date).getDate()
+
           return (
             <div key={dayData.id} className="aspect-square">
-              <DayCard day={dayData} onClick={() => onDayClick(dayData)} />
+              <DayCard day={dayData} dayNumber={dayNumber} onClick={() => onDayClick(dayData)} />
             </div>
           )
         })}
