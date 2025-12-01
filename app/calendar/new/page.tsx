@@ -20,6 +20,7 @@ export default function CalendarNewPage() {
     startDate: data.startDate,
     endDate: data.endDate,
   })
+  const [displayMode, setDisplayMode] = useState<'card_grid' | 'calendar_view'>(data.displayMode)
 
   const dayCount = dates.startDate && dates.endDate
     ? Math.ceil((new Date(dates.endDate).getTime() - new Date(dates.startDate).getTime()) / (1000 * 60 * 60 * 24)) + 1
@@ -33,6 +34,7 @@ export default function CalendarNewPage() {
       startDate: dates.startDate,
       endDate: dates.endDate,
       year: new Date(dates.startDate).getFullYear(),
+      displayMode,
     })
     router.push('/calendar/new/charities')
   }
@@ -73,6 +75,42 @@ export default function CalendarNewPage() {
                 Date Range
               </label>
               <DateRangePicker value={dates} onChange={setDates} />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Display Mode
+              </label>
+              <div className="grid grid-cols-2 gap-3">
+                <button
+                  type="button"
+                  onClick={() => setDisplayMode('calendar_view')}
+                  className={`p-4 rounded-lg border-2 text-left transition-colors ${
+                    displayMode === 'calendar_view'
+                      ? 'border-green-600 bg-green-50'
+                      : 'border-gray-300 hover:border-gray-400'
+                  }`}
+                >
+                  <div className="font-semibold mb-1">📅 Calendar View</div>
+                  <div className="text-sm text-gray-600">
+                    Traditional month calendar with day-of-week headers
+                  </div>
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setDisplayMode('card_grid')}
+                  className={`p-4 rounded-lg border-2 text-left transition-colors ${
+                    displayMode === 'card_grid'
+                      ? 'border-green-600 bg-green-50'
+                      : 'border-gray-300 hover:border-gray-400'
+                  }`}
+                >
+                  <div className="font-semibold mb-1">🎴 Card Grid</div>
+                  <div className="text-sm text-gray-600">
+                    Simple 7-column grid, no date awareness
+                  </div>
+                </button>
+              </div>
             </div>
           </div>
 

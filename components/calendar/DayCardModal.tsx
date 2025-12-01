@@ -15,6 +15,7 @@ interface DayCardModalProps {
   onRerollCharity: () => Promise<void>
   onRerollAmount: () => Promise<void>
   onMarkPaid: () => Promise<void>
+  onUnreveal?: () => Promise<void>
 }
 
 const MAX_REROLLS = 2
@@ -34,6 +35,7 @@ export function DayCardModal({
   onRerollCharity,
   onRerollAmount,
   onMarkPaid,
+  onUnreveal,
 }: DayCardModalProps) {
   const canRerollCharity = !day.isGrandPrize && charityRerollsUsed < MAX_REROLLS
   const canRerollAmount = !day.isGrandPrize && amountRerollsUsed < MAX_REROLLS
@@ -103,9 +105,20 @@ export function DayCardModal({
               </div>
             </div>
 
-            <Button className="w-full" onClick={onMarkPaid}>
-              Mark as Paid
-            </Button>
+            <div className="space-y-3">
+              <Button className="w-full" onClick={onMarkPaid}>
+                Mark as Paid
+              </Button>
+              {onUnreveal && (
+                <Button
+                  variant="outline"
+                  className="w-full text-gray-600"
+                  onClick={onUnreveal}
+                >
+                  Mark as Unread
+                </Button>
+              )}
+            </div>
           </>
         )}
 

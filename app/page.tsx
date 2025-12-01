@@ -2,10 +2,12 @@ import Link from 'next/link'
 import { Button } from '@/components/ui/Button'
 import { LandingNav } from '@/components/LandingNav'
 import { CreateCalendarButton } from '@/components/CreateCalendarButton'
+import { LandingRedirect } from '@/components/LandingRedirect'
 
 export default function Home() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-green-50 via-white to-red-50">
+      <LandingRedirect />
       <nav className="p-6">
         <div className="max-w-6xl mx-auto flex justify-between items-center">
           <Link href="/">

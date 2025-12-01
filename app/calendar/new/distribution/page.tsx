@@ -89,6 +89,7 @@ export default function DistributionPage() {
             tiers={tiers}
             grandPrize={grandPrize}
             totalDays={dayCount}
+            totalBudget={data.totalBudget}
             onUpdate={setTiers}
           />
 

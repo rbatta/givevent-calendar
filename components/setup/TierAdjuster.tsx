@@ -12,10 +12,11 @@ interface TierAdjusterProps {
   tiers: AmountTier[]
   grandPrize: { amount: number; count: 1 } | null
   totalDays: number
+  totalBudget: number
   onUpdate: (tiers: AmountTier[]) => void
 }
 
-export function TierAdjuster({ tiers, grandPrize, totalDays, onUpdate }: TierAdjusterProps) {
+export function TierAdjuster({ tiers, grandPrize, totalDays, totalBudget, onUpdate }: TierAdjusterProps) {
   const handleAdjust = (index: number, delta: number) => {
     const newTiers = [...tiers]
     newTiers[index].count = Math.max(0, newTiers[index].count + delta)
@@ -24,7 +25,9 @@ export function TierAdjuster({ tiers, grandPrize, totalDays, onUpdate }: TierAdj
 
   const currentDayCount = tiers.reduce((sum, t) => sum + t.count, 0) + (grandPrize ? 1 : 0)
   const currentTotal = tiers.reduce((sum, t) => sum + (t.amount * t.count), 0) + (grandPrize ? grandPrize.amount : 0)
-  const isValid = currentDayCount === totalDays
+  const dayCountValid = currentDayCount === totalDays
+  const budgetValid = currentTotal <= totalBudget
+  const isValid = dayCountValid && budgetValid
 
   return (
     <div className="space-y-4">
@@ -88,11 +91,16 @@ export function TierAdjuster({ tiers, grandPrize, totalDays, onUpdate }: TierAdj
       </div>
 
       <div className="space-y-2">
-        {!isValid && (
+        {!dayCountValid && (
           <div className="p-3 bg-yellow-50 border border-yellow-200 rounded-lg text-yellow-700 text-sm">
             {currentDayCount < totalDays
               ? `Need ${totalDays - currentDayCount} more day${totalDays - currentDayCount > 1 ? 's' : ''}`
               : `Remove ${currentDayCount - totalDays} day${currentDayCount - totalDays > 1 ? 's' : ''}`}
+          </div>
+        )}
+        {!budgetValid && dayCountValid && (
+          <div className="p-3 bg-red-50 border border-red-200 rounded-lg text-red-600 text-sm">
+            ⚠️ Total {formatCurrency(currentTotal)} exceeds budget of {formatCurrency(totalBudget)}
           </div>
         )}
         {isValid && (

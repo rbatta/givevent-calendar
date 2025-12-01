@@ -9,6 +9,7 @@ interface CalendarSetupData {
   year: number
   startDate: string
   endDate: string
+  displayMode: 'card_grid' | 'calendar_view'
   charities: Charity[]
   totalBudget: number
   minAmount: number
@@ -27,6 +28,7 @@ const defaultData: CalendarSetupData = {
   year: new Date().getFullYear(),
   startDate: `${new Date().getFullYear()}-12-01`,
   endDate: `${new Date().getFullYear()}-12-25`,
+  displayMode: 'calendar_view',
   charities: [],
   totalBudget: 0,
   minAmount: 0,

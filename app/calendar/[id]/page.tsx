@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { Button } from '@/components/ui/Button'
 import { CalendarGrid } from '@/components/calendar/CalendarGrid'
+import { CalendarMonthView } from '@/components/calendar/CalendarMonthView'
 import { CalendarProgress } from '@/components/calendar/CalendarProgress'
 import { DayCardModal } from '@/components/calendar/DayCardModal'
 import type { DayCardData } from '@/components/calendar/DayCard'
@@ -35,6 +36,7 @@ interface Calendar {
   id: string
   name: string
   total_budget: number
+  display_mode: 'card_grid' | 'calendar_view'
 }
 
 export default function CalendarViewPage({ params }: { params: { id: string } }) {
@@ -46,6 +48,7 @@ export default function CalendarViewPage({ params }: { params: { id: string } })
   const [selectedDay, setSelectedDay] = useState<CalendarDay | null>(null)
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [loading, setLoading] = useState(true)
+  const [viewMode, setViewMode] = useState<'card_grid' | 'calendar_view'>('calendar_view')
 
   useEffect(() => {
     fetchCalendarData()
@@ -62,6 +65,7 @@ export default function CalendarViewPage({ params }: { params: { id: string } })
 
       if (calError) throw calError
       setCalendar(calData)
+      setViewMode(calData.display_mode)
 
       // Fetch charities
       const { data: charData, error: charError } = await supabase
@@ -190,6 +194,21 @@ export default function CalendarViewPage({ params }: { params: { id: string } })
     }
   }
 
+  const handleUnreveal = async () => {
+    if (!selectedDay) return
+
+    const { error } = await supabase
+      .from('calendar_days')
+      .update({ is_revealed: false, revealed_at: null })
+      .eq('id', selectedDay.id)
+
+    if (!error) {
+      await fetchCalendarData()
+      setIsModalOpen(false)
+      setSelectedDay(null)
+    }
+  }
+
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
@@ -234,18 +253,46 @@ export default function CalendarViewPage({ params }: { params: { id: string } })
           <Link href="/dashboard">
             <h1 className="text-2xl font-bold text-green-700">Givevent</h1>
           </Link>
-          <Link href="/dashboard">
-            <Button variant="ghost">My Calendars</Button>
-          </Link>
+          <div className="flex gap-3">
+            <Link href="/calendar/new">
+              <Button>+ Calendar</Button>
+            </Link>
+            <Link href="/dashboard">
+              <Button variant="ghost">My Calendars</Button>
+            </Link>
+          </div>
         </div>
       </nav>
 
       <main className="max-w-6xl mx-auto px-6 py-12">
-        <div className="mb-6">
-          <h2 className="text-3xl font-bold text-gray-900">{calendar.name}</h2>
-          <p className="text-gray-600">
-            {formatDate(days[0]?.date)} - {formatDate(days[days.length - 1]?.date)}
-          </p>
+        <div className="mb-6 flex justify-between items-start">
+          <div>
+            <h2 className="text-3xl font-bold text-gray-900">{calendar.name}</h2>
+            <p className="text-gray-600">
+              {formatDate(days[0]?.date)} - {formatDate(days[days.length - 1]?.date)}
+            </p>
+          </div>
+          <div className="flex gap-2">
+            <Link href={`/calendar/${params.id}/edit`}>
+              <Button variant="outline" size="sm">
+                ⚙️ Settings
+              </Button>
+            </Link>
+            <Button
+              variant={viewMode === 'calendar_view' ? 'primary' : 'outline'}
+              size="sm"
+              onClick={() => setViewMode('calendar_view')}
+            >
+              📅 Calendar
+            </Button>
+            <Button
+              variant={viewMode === 'card_grid' ? 'primary' : 'outline'}
+              size="sm"
+              onClick={() => setViewMode('card_grid')}
+            >
+              🎴 Grid
+            </Button>
+          </div>
         </div>
 
         <CalendarProgress
@@ -257,7 +304,11 @@ export default function CalendarViewPage({ params }: { params: { id: string } })
           totalDays={days.length}
         />
 
-        <CalendarGrid days={dayCardData} onDayClick={handleDayClick} />
+        {viewMode === 'calendar_view' ? (
+          <CalendarMonthView days={dayCardData} onDayClick={handleDayClick} />
+        ) : (
+          <CalendarGrid days={dayCardData} onDayClick={handleDayClick} />
+        )}
 
         {selectedDay && selectedDayCharity && (
           <DayCardModal
@@ -275,6 +326,7 @@ export default function CalendarViewPage({ params }: { params: { id: string } })
             onRerollCharity={handleRerollCharity}
             onRerollAmount={handleRerollAmount}
             onMarkPaid={handleMarkPaid}
+            onUnreveal={handleUnreveal}
           />
         )}
       </main>

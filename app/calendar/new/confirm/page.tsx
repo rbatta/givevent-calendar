@@ -32,6 +32,33 @@ export default function ConfirmPage() {
     ? Math.ceil((new Date(data.endDate).getTime() - new Date(data.startDate).getTime()) / (1000 * 60 * 60 * 24)) + 1
     : 0
 
+  // Determine calendar type based on dates
+  const getCalendarType = () => {
+    if (!data.startDate || !data.endDate) return 'Custom'
+    const start = new Date(data.startDate)
+    const end = new Date(data.endDate)
+    const startMonth = start.getMonth() + 1 // 1-indexed
+    const startDay = start.getDate()
+    const endMonth = end.getMonth() + 1
+    const endDay = end.getDate()
+
+    // Advent (Dec 1 - Dec 25)
+    if (startMonth === 12 && startDay === 1 && endMonth === 12 && endDay === 25) {
+      return 'Advent Calendar'
+    }
+    // Full December (Dec 1 - Dec 31)
+    if (startMonth === 12 && startDay === 1 && endMonth === 12 && endDay === 31) {
+      return 'Full December'
+    }
+    // Christmas Week (any range ending on Dec 25)
+    if (endMonth === 12 && endDay === 25 && dayCount <= 7) {
+      return 'Christmas Week'
+    }
+    return 'Custom'
+  }
+
+  const calendarType = getCalendarType()
+
   const handleCreate = async () => {
     setCreating(true)
     setError('')
@@ -52,6 +79,7 @@ export default function ConfirmPage() {
           total_budget: data.totalBudget,
           min_amount: data.minAmount,
           max_amount: data.maxAmount,
+          display_mode: data.displayMode,
           status: 'active',
         })
         .select()
@@ -128,8 +156,7 @@ export default function ConfirmPage() {
 
       if (daysError) throw daysError
 
-      // Success! Reset context and redirect
-      resetData()
+      // Success! Redirect to calendar (context will reset on unmount)
       router.push(`/calendar/${calendar.id}`)
     } catch (err: any) {
       console.error('Error creating calendar:', err)
@@ -165,6 +192,7 @@ export default function ConfirmPage() {
               <h3 className="font-semibold text-gray-700 mb-2">Calendar Details</h3>
               <div className="bg-gray-50 p-4 rounded-lg space-y-2 text-sm">
                 <p><strong>Name:</strong> {data.name}</p>
+                <p><strong>Type:</strong> {calendarType}</p>
                 <p><strong>Dates:</strong> {formatDate(data.startDate)} - {formatDate(data.endDate)} ({dayCount} days)</p>
                 <p><strong>Total Budget:</strong> {formatCurrency(data.totalBudget)}</p>
                 <p><strong>Amount Range:</strong> {formatCurrency(data.minAmount)} - {formatCurrency(data.maxAmount)}</p>

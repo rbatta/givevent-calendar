@@ -47,11 +47,14 @@ export function LandingNav() {
   if (user) {
     return (
       <div className="flex items-center space-x-4">
-        <span className="text-sm text-gray-600">
+        <span className="text-sm text-gray-600 hidden sm:inline">
           {user.email}
         </span>
         <Link href="/dashboard">
           <Button variant="ghost">Dashboard</Button>
+        </Link>
+        <Link href="/calendar/new">
+          <Button>+ Calendar</Button>
         </Link>
         <Button variant="ghost" onClick={handleSignOut}>
           Sign Out

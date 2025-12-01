@@ -8,7 +8,9 @@ import { Card } from '@/components/ui/Card'
 import { StepIndicator } from '@/components/setup/StepIndicator'
 import { CharityForm, type Charity } from '@/components/setup/CharityForm'
 import { CharityList } from '@/components/setup/CharityList'
+import { CharityBrowser } from '@/components/setup/CharityBrowser'
 import { useCalendarSetup } from '@/lib/contexts/CalendarSetupContext'
+import type { CharityScope } from '@/lib/types/charity'
 
 const STEP_TITLES = ['Name & Dates', 'Charities', 'Budget', 'Distribution', 'Confirm']
 
@@ -17,6 +19,7 @@ export default function CharitiesPage() {
   const { data, updateData } = useCalendarSetup()
   const [charities, setCharities] = useState<Charity[]>(data.charities)
   const [editingCharity, setEditingCharity] = useState<Charity | undefined>()
+  const [isBrowserOpen, setIsBrowserOpen] = useState(false)
 
   // Redirect if no name set (haven't completed step 1)
   useEffect(() => {
@@ -62,6 +65,17 @@ export default function CharitiesPage() {
     setCharities((prev) => prev.filter((c) => c.id !== id))
   }
 
+  const handleAddFromBrowser = (charity: { name: string; url: string; scope: CharityScope; notes?: string }) => {
+    handleAddCharity({
+      name: charity.name,
+      url: charity.url,
+      scope: charity.scope,
+      notes: charity.notes || '',
+      isGrandPrize: false,
+      grandPrizeAmount: undefined
+    })
+  }
+
   const handleNext = () => {
     updateData({ charities })
     router.push('/calendar/new/budget')
@@ -86,10 +100,17 @@ export default function CharitiesPage() {
         <StepIndicator currentStep={2} totalSteps={5} stepTitles={STEP_TITLES} />
 
         <Card>
-          <h2 className="text-2xl font-bold mb-2">Add Your Charities</h2>
-          <p className="text-gray-600 mb-6">
-            Suggested mix: 2-3 international, 3-4 national, 2-3 local organizations
-          </p>
+          <div className="flex justify-between items-start mb-6">
+            <div>
+              <h2 className="text-2xl font-bold mb-2">Add Your Charities</h2>
+              <p className="text-gray-600">
+                Suggested mix: 2-3 international, 3-4 national, 2-3 local organizations
+              </p>
+            </div>
+            <Button variant="outline" onClick={() => setIsBrowserOpen(true)}>
+              Browse Charities
+            </Button>
+          </div>
 
           <CharityForm
             onAdd={handleAddCharity}
@@ -122,6 +143,12 @@ export default function CharitiesPage() {
           </div>
         </Card>
       </main>
+
+      <CharityBrowser
+        isOpen={isBrowserOpen}
+        onClose={() => setIsBrowserOpen(false)}
+        onAdd={handleAddFromBrowser}
+      />
     </div>
   )
 }
