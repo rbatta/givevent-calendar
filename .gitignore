@@ -35,3 +35,8 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# Documentation files (local only)
+DEPLOYMENT.md
+charity-data.md
+advent-charity-spec.md
