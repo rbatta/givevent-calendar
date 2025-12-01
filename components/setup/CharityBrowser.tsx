@@ -211,7 +211,6 @@ export function CharityBrowser({ isOpen, onClose, onAdd }: CharityBrowserProps) 
                       <div className="flex-1">
                         <div className="flex items-center gap-2 mb-1">
                           <h3 className="font-semibold text-lg">
-                            {charity.isAnchored && <span className="text-yellow-600">⭐ </span>}
                             {charity.name}
                           </h3>
                         </div>
@@ -220,11 +219,9 @@ export function CharityBrowser({ isOpen, onClose, onAdd }: CharityBrowserProps) 
                           <span className="capitalize bg-gray-100 px-2 py-1 rounded">
                             {charity.category.replace('-', ' ')}
                           </span>
-                          {!charity.isAnchored && (
-                            <span>
-                              {'⭐'.repeat(charity.charityNavigatorStars)} {charity.charityNavigatorRating}/100
-                            </span>
-                          )}
+                          <span>
+                            {'⭐'.repeat(charity.charityNavigatorStars)} {charity.charityNavigatorRating}/100
+                          </span>
                         </div>
                       </div>
                       <Button
