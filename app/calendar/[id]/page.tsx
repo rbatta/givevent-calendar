@@ -327,6 +327,7 @@ export default function CalendarViewPage({ params }: { params: { id: string } })
             onRerollAmount={handleRerollAmount}
             onMarkPaid={handleMarkPaid}
             onUnreveal={handleUnreveal}
+            cardNumber={viewMode === 'card_grid' ? days.findIndex(d => d.id === selectedDay.id) + 1 : undefined}
           />
         )}
       </main>

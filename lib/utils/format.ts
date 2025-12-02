@@ -19,6 +19,18 @@ export function parseLocalDate(dateStr: string): Date {
   return new Date(year, month - 1, day)
 }
 
+/**
+ * Format a Date object as a local date string (YYYY-MM-DD), avoiding UTC timezone issues.
+ * For example, a Date representing Dec 1 will always format as "2025-12-01",
+ * not "2025-11-30" or "2025-12-02" depending on timezone.
+ */
+export function toLocalDateString(date: Date): string {
+  const year = date.getFullYear()
+  const month = String(date.getMonth() + 1).padStart(2, '0')
+  const day = String(date.getDate()).padStart(2, '0')
+  return `${year}-${month}-${day}`
+}
+
 export function formatDate(date: Date | string, formatStr: string = 'MMM d, yyyy'): string {
   let dateObj: Date
   if (typeof date === 'string') {

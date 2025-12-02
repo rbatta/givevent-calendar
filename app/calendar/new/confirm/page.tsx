@@ -8,7 +8,7 @@ import { Card } from '@/components/ui/Card'
 import { StepIndicator } from '@/components/setup/StepIndicator'
 import { useCalendarSetup } from '@/lib/contexts/CalendarSetupContext'
 import { createClient } from '@/lib/supabase/client'
-import { formatDate, formatCurrency, parseLocalDate } from '@/lib/utils/format'
+import { formatDate, formatCurrency, parseLocalDate, toLocalDateString } from '@/lib/utils/format'
 import { createDayAssignments } from '@/lib/utils/shuffle'
 import { eachDayOfInterval } from 'date-fns'
 
@@ -146,7 +146,7 @@ export default function ConfirmPage() {
           dayAssignments.map((assignment) => ({
             calendar_id: calendar.id,
             charity_id: assignment.charityId,
-            date: assignment.date.toISOString().split('T')[0],
+            date: toLocalDateString(assignment.date),
             amount: assignment.amount,
             is_grand_prize: assignment.isGrandPrize,
           }))

@@ -16,6 +16,7 @@ interface DayCardModalProps {
   onRerollAmount: () => Promise<void>
   onMarkPaid: () => Promise<void>
   onUnreveal?: () => Promise<void>
+  cardNumber?: number // Optional card number for grid view
 }
 
 const MAX_REROLLS = 2
@@ -36,12 +37,16 @@ export function DayCardModal({
   onRerollAmount,
   onMarkPaid,
   onUnreveal,
+  cardNumber,
 }: DayCardModalProps) {
   const canRerollCharity = !day.isGrandPrize && charityRerollsUsed < MAX_REROLLS
   const canRerollAmount = !day.isGrandPrize && amountRerollsUsed < MAX_REROLLS
 
+  // Use card number if provided (for grid view), otherwise use date (for calendar view)
+  const title = cardNumber ? `Card ${cardNumber}` : formatDate(day.date)
+
   return (
-    <Modal isOpen={isOpen} onClose={onClose} title={formatDate(day.date)}>
+    <Modal isOpen={isOpen} onClose={onClose} title={title}>
       <div className="space-y-4">
         {day.isGrandPrize && (
           <div className="p-4 bg-yellow-50 border border-yellow-200 rounded-lg text-center">
