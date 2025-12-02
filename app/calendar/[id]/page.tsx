@@ -92,6 +92,23 @@ export default function CalendarViewPage({ params }: { params: { id: string } })
     fetchCalendarData()
   }, [fetchCalendarData])
 
+  const handleViewModeChange = async (newMode: 'card_grid' | 'calendar_view') => {
+    // Optimistically update the UI
+    setViewMode(newMode)
+
+    // Persist to database
+    const { error } = await supabase
+      .from('calendars')
+      .update({ display_mode: newMode })
+      .eq('id', params.id)
+
+    if (error) {
+      console.error('Error updating view mode:', error)
+      // Revert on error
+      await fetchCalendarData()
+    }
+  }
+
   const handleDayClick = async (dayData: DayCardData) => {
     const day = days.find(d => d.id === dayData.id)
     if (!day) return
@@ -281,14 +298,14 @@ export default function CalendarViewPage({ params }: { params: { id: string } })
             <Button
               variant={viewMode === 'calendar_view' ? 'primary' : 'outline'}
               size="sm"
-              onClick={() => setViewMode('calendar_view')}
+              onClick={() => handleViewModeChange('calendar_view')}
             >
               📅 Calendar
             </Button>
             <Button
               variant={viewMode === 'card_grid' ? 'primary' : 'outline'}
               size="sm"
-              onClick={() => setViewMode('card_grid')}
+              onClick={() => handleViewModeChange('card_grid')}
             >
               🎴 Grid
             </Button>
