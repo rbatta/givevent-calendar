@@ -1,7 +1,7 @@
 'use client'
 
 import { DayCard, type DayCardData } from './DayCard'
-import { formatDate } from '@/lib/utils/format'
+import { formatDate, parseLocalDate } from '@/lib/utils/format'
 import { startOfMonth, endOfMonth, eachDayOfInterval, getDay, format } from 'date-fns'
 
 interface CalendarMonthViewProps {
@@ -15,8 +15,9 @@ export function CalendarMonthView({ days, onDayClick }: CalendarMonthViewProps) 
   if (days.length === 0) return null
 
   // Get the first and last dates from the calendar days
-  const firstDate = new Date(days[0].date)
-  const lastDate = new Date(days[days.length - 1].date)
+  // Parse as local dates to avoid UTC timezone issues
+  const firstDate = parseLocalDate(days[0].date)
+  const lastDate = parseLocalDate(days[days.length - 1].date)
 
   // For December calendars, show the full week containing Dec 1
   // This means showing the last few days of November if Dec 1 doesn't start on Sunday
@@ -79,7 +80,7 @@ export function CalendarMonthView({ days, onDayClick }: CalendarMonthViewProps) 
             )
           }
 
-          const dayNumber = new Date(dayData.date).getDate()
+          const dayNumber = parseLocalDate(dayData.date).getDate()
 
           return (
             <div key={dayData.id} className="aspect-square">

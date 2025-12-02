@@ -9,6 +9,7 @@ import { StepIndicator } from '@/components/setup/StepIndicator'
 import { BudgetForm } from '@/components/setup/BudgetForm'
 import { useCalendarSetup } from '@/lib/contexts/CalendarSetupContext'
 import { generateAmountTiers } from '@/lib/utils/amount-distribution'
+import { parseLocalDate } from '@/lib/utils/format'
 
 const STEP_TITLES = ['Name & Dates', 'Charities', 'Budget', 'Distribution', 'Confirm']
 
@@ -32,7 +33,7 @@ export default function BudgetPage() {
   const grandPrizeAmount = grandPrizeCharity?.grandPrizeAmount || 0
 
   const dayCount = data.startDate && data.endDate
-    ? Math.ceil((new Date(data.endDate).getTime() - new Date(data.startDate).getTime()) / (1000 * 60 * 60 * 24)) + 1
+    ? Math.ceil((parseLocalDate(data.endDate).getTime() - parseLocalDate(data.startDate).getTime()) / (1000 * 60 * 60 * 24)) + 1
     : 0
 
   const canProceed =

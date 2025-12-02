@@ -9,13 +9,22 @@ export function formatCurrency(amount: number): string {
   }).format(amount)
 }
 
+/**
+ * Parse a date string (YYYY-MM-DD) as a local date, avoiding UTC timezone issues.
+ * For example, "2025-12-01" will always be December 1st in local time,
+ * not November 30th or December 2nd depending on timezone.
+ */
+export function parseLocalDate(dateStr: string): Date {
+  const [year, month, day] = dateStr.split('-').map(Number)
+  return new Date(year, month - 1, day)
+}
+
 export function formatDate(date: Date | string, formatStr: string = 'MMM d, yyyy'): string {
   let dateObj: Date
   if (typeof date === 'string') {
     // Parse date string as local date to avoid timezone issues
     // e.g., "2025-12-01" should be Dec 1, not Nov 30 or Dec 2
-    const [year, month, day] = date.split('-').map(Number)
-    dateObj = new Date(year, month - 1, day)
+    dateObj = parseLocalDate(date)
   } else {
     dateObj = date
   }

@@ -9,6 +9,7 @@ import { StepIndicator } from '@/components/setup/StepIndicator'
 import { TierAdjuster, type AmountTier } from '@/components/setup/TierAdjuster'
 import { useCalendarSetup } from '@/lib/contexts/CalendarSetupContext'
 import { generateAmountTiers } from '@/lib/utils/amount-distribution'
+import { parseLocalDate } from '@/lib/utils/format'
 
 const STEP_TITLES = ['Name & Dates', 'Charities', 'Budget', 'Distribution', 'Confirm']
 
@@ -30,7 +31,7 @@ export default function DistributionPage() {
     : null
 
   const dayCount = data.startDate && data.endDate
-    ? Math.ceil((new Date(data.endDate).getTime() - new Date(data.startDate).getTime()) / (1000 * 60 * 60 * 24)) + 1
+    ? Math.ceil((parseLocalDate(data.endDate).getTime() - parseLocalDate(data.startDate).getTime()) / (1000 * 60 * 60 * 24)) + 1
     : 0
 
   const currentDayCount = tiers.reduce((sum, t) => sum + t.count, 0) + (grandPrize ? 1 : 0)

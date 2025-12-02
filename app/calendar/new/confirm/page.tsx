@@ -8,7 +8,7 @@ import { Card } from '@/components/ui/Card'
 import { StepIndicator } from '@/components/setup/StepIndicator'
 import { useCalendarSetup } from '@/lib/contexts/CalendarSetupContext'
 import { createClient } from '@/lib/supabase/client'
-import { formatDate, formatCurrency } from '@/lib/utils/format'
+import { formatDate, formatCurrency, parseLocalDate } from '@/lib/utils/format'
 import { createDayAssignments } from '@/lib/utils/shuffle'
 import { eachDayOfInterval } from 'date-fns'
 
@@ -29,7 +29,7 @@ export default function ConfirmPage() {
   }, [data, router])
 
   const dayCount = data.startDate && data.endDate
-    ? Math.ceil((new Date(data.endDate).getTime() - new Date(data.startDate).getTime()) / (1000 * 60 * 60 * 24)) + 1
+    ? Math.ceil((parseLocalDate(data.endDate).getTime() - parseLocalDate(data.startDate).getTime()) / (1000 * 60 * 60 * 24)) + 1
     : 0
 
   // Determine calendar type based on dates
@@ -116,9 +116,10 @@ export default function ConfirmPage() {
       if (tiersError) throw tiersError
 
       // 4. Generate calendar days
+      // Parse dates as local dates to avoid UTC timezone issues
       const dates = eachDayOfInterval({
-        start: new Date(data.startDate),
-        end: new Date(data.endDate),
+        start: parseLocalDate(data.startDate),
+        end: parseLocalDate(data.endDate),
       })
 
       // Expand tiers into amounts array
