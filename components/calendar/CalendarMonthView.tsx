@@ -19,10 +19,31 @@ export function CalendarMonthView({ days, onDayClick }: CalendarMonthViewProps) 
   const firstDate = parseLocalDate(days[0].date)
   const lastDate = parseLocalDate(days[days.length - 1].date)
 
-  // For December calendars, show the full week containing Dec 1
-  // This means showing the last few days of November if Dec 1 doesn't start on Sunday
-  const monthStart = startOfMonth(lastDate) // Use last date's month (December)
-  const monthEnd = endOfMonth(lastDate)
+  // Determine which month to display by counting days in each month
+  const monthCounts = new Map<string, number>()
+  days.forEach(day => {
+    const date = parseLocalDate(day.date)
+    const monthKey = `${date.getFullYear()}-${date.getMonth()}`
+    monthCounts.set(monthKey, (monthCounts.get(monthKey) || 0) + 1)
+  })
+
+  // Find the month with the most calendar days
+  let primaryMonthKey = ''
+  let maxCount = 0
+  monthCounts.forEach((count, monthKey) => {
+    if (count > maxCount) {
+      maxCount = count
+      primaryMonthKey = monthKey
+    }
+  })
+
+  // Parse the primary month
+  const [yearStr, monthStr] = primaryMonthKey.split('-')
+  const primaryMonthDate = new Date(parseInt(yearStr), parseInt(monthStr), 1)
+
+  // Get the full month range for the primary month
+  const monthStart = startOfMonth(primaryMonthDate)
+  const monthEnd = endOfMonth(primaryMonthDate)
 
   // Get all days in the month
   const monthDays = eachDayOfInterval({ start: monthStart, end: monthEnd })
@@ -40,7 +61,7 @@ export function CalendarMonthView({ days, onDayClick }: CalendarMonthViewProps) 
     <div className="bg-white rounded-lg shadow-sm p-4 md:p-6">
       <div className="mb-4">
         <h3 className="text-2xl font-bold text-gray-900">
-          {format(firstDate, 'MMMM yyyy')}
+          {format(primaryMonthDate, 'MMMM yyyy')}
         </h3>
       </div>
 
